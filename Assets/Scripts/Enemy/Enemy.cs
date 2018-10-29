@@ -271,14 +271,15 @@ public class Enemy : MonoBehaviour
         }
         if (canOpenDoor)
         {
-            weightedNeighbours.Concat(current.neighboursDoor.Where(x =>
+            weightedNeighbours.Concat(current.neighboursDoor.Aggregate(new List<Tuple<Node, float>>(), (x, y) =>
             {
                 foreach (var item in weightedNeighbours)
                 {
-                    if (item.Item1 == x) return false;
+                    if (y.Equals(item.Item1)) return x;
                 }
-                return true;
-            }).Select(x => Tuple.Create(x, Vector3.Distance(current.transform.position, x.transform.position) * x.cost)).ToList());
+                x.Add(Tuple.Create(y, Vector3.Distance(current.transform.position, y.transform.position * y.cost)));
+                return x;
+            }));
         }
         return weightedNeighbours;
     }
