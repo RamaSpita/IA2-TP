@@ -1,0 +1,6 @@
+Para probar eso con objetos propios:
+
+1-Crear el Prefab del objeto y agregarle el script "BaseObject".
+2-Ponerlo en la carpeta "Objects" dentro de la carpeta  "Resources".
+3-En el Script "AllObjects" agregar en la variable "objectList" el nombre
+con el que guardaron el objecto.
