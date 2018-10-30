@@ -61,10 +61,17 @@ public class CellCustom : Editor
         }
 
         GUILayout.Space(5);
+        if (cell.floorPart != null)
+        {
+            GUILayout.BeginHorizontal();
+            cell.isTrancitable = EditorGUILayout.Toggle("Is Trancitable", cell.isTrancitable);
+            GUILayout.EndHorizontal();
+        }
         GUILayout.BeginHorizontal();
         GUILayout.Label("Floor", _labelStyle);
         cell.floorPart = (FloorCellPart)EditorGUILayout.ObjectField(cell.floorPart, typeof(FloorCellPart), false);
         GUILayout.EndHorizontal();
+
 
         if (cell.floorPart != null)
         {

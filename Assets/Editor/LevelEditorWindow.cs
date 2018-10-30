@@ -110,8 +110,8 @@ public class LevelEditorWindow : EditorWindow
             EditorSceneManager.MarkSceneDirty(EditorSceneManager.GetActiveScene());
         }
 
-        //if (GUILayout.Button("UPDATE ALL CELLS"))
-        //    UpdateAllCells();
+        if (GUILayout.Button("All Trancitable"))
+            SetAllAsTrancitable();
 
         GUILayout.EndHorizontal();
 
@@ -152,10 +152,17 @@ public class LevelEditorWindow : EditorWindow
             }
 
             GUILayout.Space(5);
+            if (cell.floorPart != null)
+            {
+                GUILayout.BeginHorizontal();
+                cell.isTrancitable = EditorGUILayout.Toggle("Is Trancitable", cell.isTrancitable);
+                GUILayout.EndHorizontal();
+            }
             GUILayout.BeginHorizontal();
             GUILayout.Label("Floor", _labelStyle);
-            this.cell.floorPart = (FloorCellPart)EditorGUILayout.ObjectField(this.cell.floorPart, typeof(FloorCellPart), false);
+            cell.floorPart = (FloorCellPart)EditorGUILayout.ObjectField(cell.floorPart, typeof(FloorCellPart), false);
             GUILayout.EndHorizontal();
+
 
             if (this.cell.floorPart != null)
             {
@@ -707,6 +714,16 @@ public class LevelEditorWindow : EditorWindow
         foreach (var cell in allCellsList)
         {
             cell.UpdateCell();
+        }
+    }
+
+    public void SetAllAsTrancitable()
+    {
+        var allCellsList = GameObject.FindObjectsOfType<Cell>();
+        foreach (var cell in allCellsList)
+        {
+            cell.isTrancitable = true;
+            cell.UpdateNodeTransitable();
         }
     }
 

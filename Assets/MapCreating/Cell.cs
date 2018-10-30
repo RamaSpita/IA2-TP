@@ -13,7 +13,7 @@ public class Cell : MonoBehaviour
 
 #if (UNITY_EDITOR)
 
-
+    public bool isTrancitable;
     private bool check = false;
     public bool finished = false;
 
@@ -552,13 +552,21 @@ public class Cell : MonoBehaviour
     }
 
     public void Confirm()
-   {
+    {
         if (finished) return;
+
+        UpdateNodeTransitable();
 
         if (floorPart != _lastFloorPart)
         {
             _lastFloorPart = floorPart;
             _floorObject = _floorObject.ObjectChange(floorPart, _floorAnchor, transform);
+            if (_floorObject!= null)
+            {
+                var node = _floorObject.GetComponent<Node>();
+                if (node != null)
+                    node.transitable = isTrancitable;
+            }
         }
 
         if (wallBackPart != _lastWallBackPart)
@@ -610,7 +618,7 @@ public class Cell : MonoBehaviour
             if (floorPropB[i] != _lastFloorPropB[i])
             {
                 _lastFloorPropB[i] = floorPropB[i];
-                _floorPropsObjectsB[i] = _floorPropsObjectsB[i].PropChange(floorPropB[i], _floorAnchors[i+9], transform);
+                _floorPropsObjectsB[i] = _floorPropsObjectsB[i].PropChange(floorPropB[i], _floorAnchors[i + 9], transform);
             }
         }
         for (int i = 0; i < wallBackPropF.Length; i++)
@@ -699,7 +707,7 @@ public class Cell : MonoBehaviour
             if (vertexProp[i] != _lastvertexProp[i])
             {
                 _lastvertexProp[i] = vertexProp[i];
-                _vertexPropsObjects[i] = _vertexPropsObjects[i].PropChange(vertexProp[i], _vertexAnchors[i],transform);
+                _vertexPropsObjects[i] = _vertexPropsObjects[i].PropChange(vertexProp[i], _vertexAnchors[i], transform);
             }
         }
 
@@ -711,6 +719,16 @@ public class Cell : MonoBehaviour
             centerFloorObject.transform.eulerAngles = centerObjectRotation;
         }
 
+    }
+
+    public void UpdateNodeTransitable()
+    {
+        if (_floorObject != null)
+        {
+            var node = _floorObject.GetComponent<Node>();
+            if (node != null)
+                node.transitable = isTrancitable;
+        }
     }
 
 #endif

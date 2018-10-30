@@ -19,5 +19,14 @@ public class RenameAllChildsCustom : Editor
         {
             parent.Rename();
         }
+
+        if (GUILayout.Button("CHauuuu"))
+        {
+            parent.Sa();
+        }
+        if (GUILayout.Button("CHauuuu22222"))
+        {
+            parent.Chau2();
+        }
     }
 }

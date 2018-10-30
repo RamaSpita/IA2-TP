@@ -15,7 +15,12 @@ public static class Extentions
         if (spawnPart == null)
             return null;
         var partObjectAux = (GameObject)PrefabUtility.InstantiatePrefab(spawnPart.prop);
+
+        if (partObjectAux.GetComponent<IfSelectedSelectOther>() == null)
+            partObjectAux.AddComponent<IfSelectedSelectOther>();
+
         partObjectAux.AddComponent<IfSelectedSelectOther>().targetToSelect = onSelectedSelect;
+
         partObjectAux.transform.parent = anchor;
         partObjectAux.transform.position = anchor.position;
         partObjectAux.transform.localScale = anchor.localScale;
@@ -36,7 +41,13 @@ public static class Extentions
             return null;
         var partObjectAux = (GameObject)PrefabUtility.InstantiatePrefab(spawnProp.prop);
         partObjectAux.transform.parent = anchor;
+
+        if (partObjectAux.GetComponent<IfSelectedSelectOther>() == null)
+            partObjectAux.AddComponent<IfSelectedSelectOther>();
+
         partObjectAux.AddComponent<IfSelectedSelectOther>().targetToSelect = onSelectedSelect;
+
+
         partObjectAux.transform.position = anchor.position;
         partObjectAux.transform.localScale = anchor.localScale;
         partObjectAux.transform.rotation = anchor.rotation;

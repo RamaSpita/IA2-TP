@@ -62,6 +62,7 @@ public class SpatialGrid3d : MonoBehaviour
 
         foreach (var e in ents)
         {
+            e.OnDeath += RemoveOnDeath;
             e.OnMove += UpdateEntity;
             UpdateEntity(e);
         }
@@ -125,7 +126,6 @@ public class SpatialGrid3d : MonoBehaviour
                 )
             )
         );
-
         // Iteramos las que queden dentro del criterio
         return cells
             .SelectMany(cell => buckets[cell.Item1, cell.Item2, cell.Item3])
@@ -136,6 +136,16 @@ public class SpatialGrid3d : MonoBehaviour
             ).Where(x => filterByPosition(x.transform.position));
     }
 
+    public void RemoveOnDeath(GridEntity entity)
+    {
+        entity.OnDeath -= RemoveOnDeath;
+        entity.OnMove -= UpdateEntity;
+
+        for (int i = 0; i < width; i++)
+            for (int j = 0; j < height; j++)
+                for (int k = 0; k < deep; k++)
+                    buckets[i, j, k].Remove(entity);
+    }
     public Tuple<int, int , int> GetPositionInGrid(Vector3 pos)
     {
         //quita la diferencia, divide segun las celdas y floorea
