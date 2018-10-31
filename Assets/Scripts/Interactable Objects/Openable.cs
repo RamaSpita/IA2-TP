@@ -10,6 +10,8 @@ public class Openable : MonoBehaviour, Iinteractable
     public List<Node> mynodes = new List<Node>();
     public PlayerReference playerVariables;
 
+    private Node stairNode;
+
     public virtual void Awake()
     {
         GetNeighbours();
@@ -21,11 +23,12 @@ public class Openable : MonoBehaviour, Iinteractable
         RaycastHit hitInfo;
         Ray ray = new Ray()
         {
-            origin = transform.position + transform.up
+            origin = transform.position + transform.up * 0.25f
         };
-        _directions.Add((-Vector3.up + transform.forward * 2).normalized);
-        _directions.Add((-Vector3.up - transform.forward * 2).normalized);
+        _directions.Add((-Vector3.up * 0.25f + transform.forward * 2).normalized);
+        _directions.Add((-Vector3.up * 0.25f - transform.forward * 2).normalized);
         var mask = 1 << LayerMask.NameToLayer("Node");
+        mask += 1 << LayerMask.NameToLayer("Stairs");
         for (int i = 0; i < _directions.Count; i++)
         {
             ray.direction = _directions[i];
@@ -36,8 +39,17 @@ public class Openable : MonoBehaviour, Iinteractable
                 {
                     mynodes.Add(node);
                 }
+                else if (hitInfo.transform.gameObject.layer == LayerMask.NameToLayer("Stairs"))
+                {
+                    stairNode = hitInfo.transform.Find("Node").GetComponent<Node>();
+                    if (stairNode.transitable)
+                    {
+                        mynodes.Add(stairNode);
+                    }
+                }
             }
         }
+        if (stairNode != null) stairNode.neighbours.Concat(mynodes.Where(x => !x.Equals(stairNode)));
     }
     public virtual void Interact(params object[] obj)
     {
